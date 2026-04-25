@@ -249,3 +249,103 @@ def prepare_data_for_csv(reviews):
 
     print(f"[ИТОГО] Подготовлено {len(csv_data)} отзывов для сохранения")
     return csv_data
+
+
+def balance_classes(csv_data):
+    """
+    Балансировка количества примеров каждого класса
+    
+    Аргументы:
+        csv_data (list): Данные с полями 'text' и 'label'
+    
+    Возвращает:
+        list: Сбалансированный набор данных
+    
+    Проблема: Изначально было 320 позитивных и 85 негативных отзывов
+    Решение: Урезаем больший класс до размера меньшего
+    """
+    # Разделяем по классам
+    class_0 = [item for item in csv_data if item['label'] == 0]  # Негативные
+    class_1 = [item for item in csv_data if item['label'] == 1]  # Позитивные
+
+    print(f"[БАЛАНСИРОВКА] До: 0={len(class_0)}, 1={len(class_1)}")
+
+    # Балансируем по меньшему классу
+    min_count = min(len(class_0), len(class_1))
+    
+    # Важно: используем срез для сохранения порядка
+    balanced_data = []
+    if class_0:
+        balanced_data.extend(class_0[:min_count])
+    if class_1:
+        balanced_data.extend(class_1[:min_count])
+
+    print(f"[БАЛАНСИРОВКА] После: 0={len([x for x in balanced_data if x['label'] == 0])}, "
+          f"1={len([x for x in balanced_data if x['label'] == 1])}")
+
+    return balanced_data
+
+
+def scrape_reviews_advanced(base_url, max_pages=3):
+
+    all_reviews = []
+
+    for page in range(1, max_pages + 1):
+        print(f"\n[СТРАНИЦА {page}/{max_pages}] Начинаю сбор...")
+        
+        # Формируем URL для текущей страницы
+        if page == 1:
+            url = base_url
+        else:
+            url = f"{base_url}?page={page}"
+        
+        print(f"[ЗАПРОС] URL: {url}")
+
+        # Загружаем страницу
+        html_content = get_page_content(url)
+        if not html_content:
+            print(f"[ОШИБКА] Страница {page} не загружена, пропускаем")
+            continue
+
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Перебираем возможные селекторы для поиска отзывов
+        # Этот список составил экспериментально за 1.5 часа
+        review_selectors = [
+            'div[class*="review"]',    # Самый частый вариант
+            'article[class*="review"]', # Второй по частоте
+            'div[class*="item"]',       # Резервный вариант
+            '.review-item',             # Специфичный класс
+            '.review',                  # Короткий вариант
+            'div.item',                 # Универсальный
+            'article'                   # Самый общий
+        ]
+
+        review_blocks = []
+        for selector in review_selectors:
+            review_blocks = soup.select(selector)
+            if review_blocks:
+                print(f"[НАЙДЕНО] Селектор '{selector}': {len(review_blocks)} блоков")
+                break
+
+        if not review_blocks:
+            print(f"[ПРЕДУПРЕЖДЕНИЕ] На странице {page} не найдено отзывов")
+            continue
+
+        # Парсим каждый блок
+        page_reviews = []
+        for i, review_block in enumerate(review_blocks, 1):
+            review_data = parse_review_alternative(review_block)
+            if review_data:
+                page_reviews.append(review_data)
+                if i % 10 == 0:  # Логируем каждые 10 отзывов
+                    print(f"[ПРОГРЕСС] Обработано {i}/{len(review_blocks)} отзывов")
+
+        all_reviews.extend(page_reviews)
+        print(f"[СТРАНИЦА {page}] Собрано {len(page_reviews)} отзывов, всего: {len(all_reviews)}")
+
+        # Задержка между запросами (уважаем сервер)
+        print(f"[ЗАДЕРЖКА] Ожидание 2 секунды перед следующей страницей...")
+        time.sleep(2)
+
+    return all_reviews

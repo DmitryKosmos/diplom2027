@@ -349,3 +349,110 @@ def scrape_reviews_advanced(base_url, max_pages=3):
         time.sleep(2)
 
     return all_reviews
+
+
+def save_to_csv(csv_data, filename):
+    if not csv_data:
+        print("[ОШИБКА] Нет данных для сохранения")
+        return False
+
+    # Балансируем классы перед сохранением
+    balanced_data = balance_classes(csv_data)
+
+    if not balanced_data:
+        print("[ОШИБКА] Нет данных после балансировки")
+        return False
+
+    # Сохраняем в CSV
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        fieldnames = ['text', 'label']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for row in balanced_data:
+            writer.writerow(row)
+
+    print(f"[СОХРАНЕНИЕ] {len(balanced_data)} отзывов сохранено в {filename}")
+    return True
+
+
+def main():
+
+    print("="*60)
+    print("ПАРСЕР ОТЗЫВОВ ДЛЯ АНАЛИЗА ТОНАЛЬНОСТИ")
+    print("="*60)
+    print(f"Время запуска: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print()
+
+    # Конфигурация парсинга
+    base_url = "https://otzovik.com/reviews/moskovskiy_universitet_imeni_s_yu_vitte_muiv/"
+    max_pages = 5  # Увеличено до 5 страниц для большего датасета
+
+    print(f"[КОНФИГ] URL: {base_url}")
+    print(f"[КОНФИГ] Страниц для парсинга: {max_pages}")
+    print()
+
+    # ШАГ 1: Сбор отзывов
+    print("[ЭТАП 1] Сбор отзывов...")
+    reviews = scrape_reviews_advanced(base_url, max_pages)
+
+    if not reviews:
+        print("[КРИТИЧЕСКАЯ ОШИБКА] Не удалось собрать отзывы")
+        return
+
+    print(f"\n[ЭТАП 1 - ГОТОВО] Собрано {len(reviews)} отзывов")
+
+    # ШАГ 2: Подготовка данных
+    print("\n[ЭТАП 2] Подготовка данных для CSV...")
+    csv_data = prepare_data_for_csv(reviews)
+
+    if not csv_data:
+        print("[КРИТИЧЕСКАЯ ОШИБКА] Не удалось подготовить данные")
+        return
+
+    print(f"[ЭТАП 2 - ГОТОВО] Подготовлено {len(csv_data)} отзывов")
+
+    # ШАГ 3: Сохранение
+    print("\n[ЭТАП 3] Сохранение в CSV...")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"sentiment_reviews_{timestamp}.csv"
+
+    success = save_to_csv(csv_data, filename)
+
+    # ШАГ 4: Финальная статистика
+    if success:
+        print("\n[ФИНАЛЬНАЯ СТАТИСТИКА]")
+        balanced_data = balance_classes(csv_data)
+        label_counts = {}
+        for item in balanced_data:
+            label = item['label']
+            label_counts[label] = label_counts.get(label, 0) + 1
+
+        print(f"0 (Негативные): {label_counts.get(0, 0)}")
+        print(f"1 (Позитивные): {label_counts.get(1, 0)}")
+        print(f"Всего: {len(balanced_data)}")
+
+        # Показываем примеры собранных данных
+        print(f"\n[ПРИМЕРЫ ДАННЫХ] (первые 5 записей)")
+        print("-" * 50)
+        for i, item in enumerate(balanced_data[:5], 1):
+            label_desc = {0: 'NEGATIVE', 1: 'POSITIVE'}
+            print(f"{i}. [{label_desc[item['label']]}] {item['text'][:100]}...")
+        print("-" * 50)
+
+        print(f"\n[ГОТОВО] Файл сохранен: {filename}")
+        print(f"Размер файла: {len(balanced_data)} строк")
+    else:
+        print("[ОШИБКА] Не удалось сохранить данные")
+
+
+# Точка входа в программу
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n[ОСТАНОВЛЕНО] Пользователь прервал выполнение")
+    except Exception as e:
+        print(f"\n[НЕОЖИДАННАЯ ОШИБКА] {e}")
+        import traceback
+        traceback.print_exc()

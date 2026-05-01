@@ -87,3 +87,9 @@ class AttentionLayer(layers.Layer):
         config = super(AttentionLayer, self).get_config()
         return config
 
+
+class TextClassifier:
+    """
+    Основной класс для классификации текстов.
+    Поддерживает BiLSTM + Attention и Transformer модели.
+    """

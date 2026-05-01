@@ -490,3 +490,12 @@ class TextClassifier:
         tokenizer.save_pretrained(str(self.model_dir / 'tokenizer'))
 
         return history
+
+    def load_model(self, model_dir: str):
+        """
+        Загрузка сохраненной модели и артефактов.
+
+        Args:
+            model_dir: Директория с сохраненной моделью
+        """
+        model_dir = Path(model_dir)

@@ -312,3 +312,28 @@ class TextClassifier:
 
         # Построение модели
         self.model = self._build_bilstm_model(n_classes)
+
+
+        # Callbacks
+        callbacks = [
+            ModelCheckpoint(
+                filepath=str(self.model_dir / 'best_model.h5'),
+                monitor='val_loss',
+                save_best_only=True,
+                save_weights_only=False,
+                verbose=1
+            ),
+            ReduceLROnPlateau(
+                monitor='val_loss',
+                factor=0.5,
+                patience=2,
+                min_lr=1e-7,
+                verbose=1
+            ),
+            EarlyStopping(
+                monitor='val_loss',
+                patience=3,
+                restore_best_weights=True,
+                verbose=1
+            )
+        ]

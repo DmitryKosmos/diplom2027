@@ -382,3 +382,8 @@ class TextClassifier:
 
         texts = df['text'].tolist()
         labels = df['label'].tolist()
+
+        # Определение количества классов
+        unique_labels = sorted(set(labels))
+        n_classes = len(unique_labels)
+        logger.info(f"Количество классов: {n_classes}")

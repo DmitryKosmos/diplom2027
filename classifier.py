@@ -288,3 +288,8 @@ class TextClassifier:
 
         # Подготовка данных для BiLSTM
         X, y = self._prepare_data_bilstm(texts, labels_encoded, fit_tokenizer=True)
+
+        # Сохранение токенизатора
+        tokenizer_path = self.model_dir / 'tokenizer.pickle'
+        with open(tokenizer_path, 'wb') as f:
+            pickle.dump(self.tokenizer, f)

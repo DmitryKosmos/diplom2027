@@ -9,6 +9,27 @@ import warnings
 import sys
 import os
 import locale
+
+
+# Исправление кодировки для Windows
+if sys.platform == 'win32':
+    # Устанавливаем кодировку консоли на UTF-8
+    os.system('chcp 65001 > nul')
+
+    # Перенаправляем вывод через UTF-8
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+    # Альтернативный способ для старых версий Python
+    if not hasattr(sys.stdout, 'reconfigure'):
+        import io
+
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+warnings.filterwarnings('ignore')
+
+
 # Основные зависимости
 import numpy as np
 import pandas as pd

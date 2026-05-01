@@ -683,3 +683,18 @@ class TextClassifier:
                 pred_class = 1 if prediction[0][0] > 0.5 else 0
             else:
                 pred_class = np.argmax(prediction[0])
+
+        else:  # transformer
+            # Токенизация
+            encodings = self.tokenizer(
+                text,
+                padding=True,
+                truncation=True,
+                max_length=512,
+                return_tensors='tf'
+            )
+
+            # Предсказание
+            outputs = self.model(encodings)
+            logits = outputs.logits
+            pred_class = tf.argmax(logits, axis=-1).numpy()[0]

@@ -476,3 +476,13 @@ class TextClassifier:
         )
 
         logger.info("Обучение завершено!")
+
+        # Сохранение конфигурации
+        config_save_path = self.model_dir / 'config.json'
+        with open(config_save_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                'model_type': 'transformer',
+                'model_name': model_name,
+                'n_classes': n_classes
+            }, f, indent=2, ensure_ascii=False)
+

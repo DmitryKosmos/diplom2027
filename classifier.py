@@ -651,3 +651,28 @@ class TextClassifier:
             'predictions': pred_classes,
             'true_labels': labels_encoded
         }
+
+    def predict(self, text: str) -> Union[int, str]:
+        """
+        Предсказание для одного текста.
+
+        Args:
+            text: Текст для классификации
+
+        Returns:
+            Предсказанная метка (в исходном формате)
+        """
+        if self.model is None:
+            raise ValueError("Модель не загружена. Сначала выполните load_model()")
+
+        # Предсказание в зависимости от типа модели
+        if self.model_type == 'bilstm':
+            # Подготовка текста
+            sequences = self.tokenizer.texts_to_sequences([text])
+            padded = pad_sequences(
+                sequences,
+                maxlen=self.config['max_len'],
+                padding='post',
+                truncating='post'
+            )
+

@@ -510,3 +510,9 @@ class TextClassifier:
         if (model_dir / 'best_model.h5').exists():
             self.model_type = 'bilstm'
             logger.info("Загрузка BiLSTM модели...")
+
+            # Загрузка модели с пользовательским слоем
+            self.model = tf.keras.models.load_model(
+                str(model_dir / 'best_model.h5'),
+                custom_objects={'AttentionLayer': AttentionLayer}
+            )

@@ -704,3 +704,18 @@ class TextClassifier:
             return self.label_encoder.inverse_transform([pred_class])[0]
         else:
             return pred_class
+
+def main():
+    """Основная функция для CLI интерфейса."""
+    parser = argparse.ArgumentParser(description='Система классификации текстов')
+    parser.add_argument('--mode', required=True,
+                        choices=['train', 'train_transformer', 'evaluate', 'predict'],
+                        help='Режим работы')
+    parser.add_argument('--data', help='Путь к CSV файлу с данными')
+    parser.add_argument('--model_dir', default='./models', help='Директория для сохранения/загрузки модели')
+    parser.add_argument('--config', help='Путь к JSON файлу конфигурации')
+    parser.add_argument('--model_name', default='distilbert-base-multilingual-cased',
+                        help='Название предобученной модели для трансформера')
+    parser.add_argument('--text', help='Текст для классификации (для режима predict)')
+
+    args = parser.parse_args()

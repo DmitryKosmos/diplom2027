@@ -404,3 +404,8 @@ class TextClassifier:
             random_state=42,
             stratify=labels_encoded
         )
+
+        # Загрузка токенизатора
+        logger.info(f"Загрузка токенизатора {model_name}")
+        tokenizer = DistilBertTokenizer.from_pretrained(model_name)
+

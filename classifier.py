@@ -285,3 +285,6 @@ class TextClassifier:
         # Кодирование меток (для многоклассовой классификации)
         self.label_encoder = LabelEncoder()
         labels_encoded = self.label_encoder.fit_transform(labels)
+
+        # Подготовка данных для BiLSTM
+        X, y = self._prepare_data_bilstm(texts, labels_encoded, fit_tokenizer=True)

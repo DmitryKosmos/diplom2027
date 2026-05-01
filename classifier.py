@@ -266,3 +266,11 @@ class TextClassifier:
         config_save_path = self.model_dir / 'config.json'
         with open(config_save_path, 'w', encoding='utf-8') as f:
             json.dump(self.config, f, indent=2, ensure_ascii=False)
+
+        # Загрузка данных
+        logger.info(f"Загрузка данных из {data_path}")
+        df = pd.read_csv(data_path, encoding='utf-8')
+        self._validate_data(df)
+
+        texts = df['text'].tolist()
+        labels = df['label'].tolist()

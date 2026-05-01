@@ -440,3 +440,11 @@ class TextClassifier:
             num_labels=n_classes
         )
 
+        # Компиляция
+        optimizer = tf.keras.optimizers.Adam(learning_rate=2e-5)
+        loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        self.model.compile(
+            optimizer=optimizer,
+            loss=loss,
+            metrics=['accuracy']
+        )

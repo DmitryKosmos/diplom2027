@@ -505,3 +505,8 @@ class TextClassifier:
         if config_path.exists():
             with open(config_path, 'r', encoding='utf-8') as f:
                 self.config.update(json.load(f))
+
+        # Определение типа модели
+        if (model_dir / 'best_model.h5').exists():
+            self.model_type = 'bilstm'
+            logger.info("Загрузка BiLSTM модели...")

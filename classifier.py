@@ -357,3 +357,20 @@ class TextClassifier:
         logger.info(f"Validation Accuracy: {val_accuracy:.4f}")
 
         return history
+
+    def train_transformer(self, data_path: str, model_name: str = "distilbert-base-multilingual-cased"):
+        """
+        Обучение Transformer модели (DistilBERT).
+
+        Args:
+            data_path: Путь к CSV файлу с данными
+            model_name: Название предобученной модели
+        """
+        if not TRANSFORMERS_AVAILABLE:
+            raise ImportError("Библиотека transformers не установлена. Установите: pip install transformers")
+
+        logger.info("=" * 50)
+        logger.info("Запуск обучения Transformer модели")
+        logger.info("=" * 50)
+
+        self.model_type = 'transformer'

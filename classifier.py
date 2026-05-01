@@ -298,3 +298,14 @@ class TextClassifier:
         encoder_path = self.model_dir / 'label_encoder.pickle'
         with open(encoder_path, 'wb') as f:
             pickle.dump(self.label_encoder, f)
+
+        # Разделение на train/validation
+        X_train, X_val, y_train, y_val = train_test_split(
+            X, y,
+            test_size=self.config['val_size'],
+            random_state=42,
+            stratify=y
+        )
+
+        logger.info(f"Размер обучающей выборки: {len(X_train)}")
+        logger.info(f"Размер валидационной выборки: {len(X_val)}")

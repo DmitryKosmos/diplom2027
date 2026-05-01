@@ -143,3 +143,37 @@ class TextClassifier:
             raise ValueError("Данные содержат пропущенные значения")
 
         return True
+
+    def _prepare_data_bilstm(self, texts: List[str], labels: List[int], fit_tokenizer: bool = False):
+        """
+        Подготовка данных для BiLSTM модели.
+
+        Args:
+            texts: Список текстов
+            labels: Список меток
+            fit_tokenizer: Обучать ли токенизатор заново
+
+        Returns:
+            Подготовленные данные
+        """
+        if fit_tokenizer:
+            self.tokenizer = Tokenizer(
+                num_words=self.config['max_tokens'],
+                oov_token='<OOV>'
+            )
+            self.tokenizer.fit_on_texts(texts)
+
+            # Сохранение словаря
+            word_index = self.tokenizer.word_index
+            logger.info(f"Размер словаря: {len(word_index)} токенов")
+
+        # Преобразование текстов в последовательности
+        sequences = self.tokenizer.texts_to_sequences(texts)
+        padded = pad_sequences(
+            sequences,
+            maxlen=self.config['max_len'],
+            padding='post',
+            truncating='post'
+        )
+
+        return padded, np.array(labels)

@@ -540,3 +540,11 @@ class TextClassifier:
                 self.tokenizer = DistilBertTokenizer.from_pretrained(str(tokenizer_path))
         else:
             raise FileNotFoundError(f"Не найдена модель в директории {model_dir}")
+
+        # Загрузка LabelEncoder
+        encoder_path = model_dir / 'label_encoder.pickle'
+        if encoder_path.exists():
+            with open(encoder_path, 'rb') as f:
+                self.label_encoder = pickle.load(f)
+
+        logger.info(f"Модель загружена из {model_dir}")

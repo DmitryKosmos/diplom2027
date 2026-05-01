@@ -516,3 +516,15 @@ class TextClassifier:
                 str(model_dir / 'best_model.h5'),
                 custom_objects={'AttentionLayer': AttentionLayer}
             )
+
+            # Загрузка токенизатора
+            tokenizer_path = model_dir / 'tokenizer.pickle'
+            with open(tokenizer_path, 'rb') as f:
+                self.tokenizer = pickle.load(f)
+
+        elif (model_dir / 'best_transformer').exists():
+            if not TRANSFORMERS_AVAILABLE:
+                raise ImportError("Библиотека transformers не установлена")
+
+            self.model_type = 'transformer'
+            logger.info("Загрузка Transformer модели...")

@@ -432,3 +432,11 @@ class TextClassifier:
             dict(val_encodings),
             val_labels
         )).batch(16)
+
+        # Загрузка модели
+        logger.info(f"Загрузка модели {model_name}")
+        self.model = TFDistilBertForSequenceClassification.from_pretrained(
+            model_name,
+            num_labels=n_classes
+        )
+

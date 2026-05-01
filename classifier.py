@@ -569,3 +569,18 @@ class TextClassifier:
                 self.label_encoder = pickle.load(f)
 
         logger.info(f"Модель загружена из {model_dir}")
+
+    def evaluate(self, test_data_path: str):
+        """
+        Оценка модели на тестовых данных.
+
+        Args:
+            test_data_path: Путь к CSV файлу с тестовыми данными
+        """
+        logger.info("=" * 50)
+        logger.info("Оценка модели")
+        logger.info("=" * 50)
+
+        if self.model is None:
+            raise ValueError("Модель не загружена. Сначала выполните load_model()")
+

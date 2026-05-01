@@ -391,3 +391,8 @@ class TextClassifier:
         # Кодирование меток
         self.label_encoder = LabelEncoder()
         labels_encoded = self.label_encoder.fit_transform(labels)
+
+        # Сохранение LabelEncoder
+        encoder_path = self.model_dir / 'label_encoder.pickle'
+        with open(encoder_path, 'wb') as f:
+            pickle.dump(self.label_encoder, f)

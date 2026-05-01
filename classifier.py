@@ -584,3 +584,10 @@ class TextClassifier:
         if self.model is None:
             raise ValueError("Модель не загружена. Сначала выполните load_model()")
 
+        # Загрузка тестовых данных
+        logger.info(f"Загрузка тестовых данных из {test_data_path}")
+        df = pd.read_csv(test_data_path, encoding='utf-8')
+        self._validate_data(df)
+
+        texts = df['text'].tolist()
+        labels = df['label'].tolist()

@@ -528,3 +528,8 @@ class TextClassifier:
 
             self.model_type = 'transformer'
             logger.info("Загрузка Transformer модели...")
+
+            # Загрузка модели
+            self.model = TFDistilBertForSequenceClassification.from_pretrained(
+                str(model_dir / 'best_transformer')
+            )

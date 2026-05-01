@@ -47,3 +47,28 @@ DEFAULT_CONFIG = {
     "val_size": 0.2,
     "n_classes": 2
 }
+
+
+class AttentionLayer(layers.Layer):
+    """
+    Кастомный слой внимания для BiLSTM модели.
+    Взвешивает важность каждого временного шага.
+    """
+
+    def __init__(self, **kwargs):
+        super(AttentionLayer, self).__init__(**kwargs)
+
+    def build(self, input_shape):
+        self.W = self.add_weight(
+            name='attention_weight',
+            shape=(input_shape[-1], 1),
+            initializer='random_normal',
+            trainable=True
+        )
+        self.b = self.add_weight(
+            name='attention_bias',
+            shape=(input_shape[1], 1),
+            initializer='zeros',
+            trainable=True
+        )
+        super(AttentionLayer, self).build(input_shape)

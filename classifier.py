@@ -533,3 +533,10 @@ class TextClassifier:
             self.model = TFDistilBertForSequenceClassification.from_pretrained(
                 str(model_dir / 'best_transformer')
             )
+
+            # Загрузка токенизатора
+            tokenizer_path = model_dir / 'tokenizer'
+            if tokenizer_path.exists():
+                self.tokenizer = DistilBertTokenizer.from_pretrained(str(tokenizer_path))
+        else:
+            raise FileNotFoundError(f"Не найдена модель в директории {model_dir}")

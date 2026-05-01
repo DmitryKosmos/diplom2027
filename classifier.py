@@ -239,3 +239,18 @@ class TextClassifier:
 
         model.summary(print_fn=logger.info)
         return model
+
+    def train_bilstm(self, data_path: str, config_path: Optional[str] = None):
+        """
+        Обучение BiLSTM модели.
+
+        Args:
+            data_path: Путь к CSV файлу с данными
+            config_path: Путь к JSON файлу с конфигурацией (опционально)
+        """
+        logger.info("=" * 50)
+        logger.info("Запуск обучения BiLSTM модели")
+        logger.info("=" * 50)
+
+        self.model_type = 'bilstm'
+

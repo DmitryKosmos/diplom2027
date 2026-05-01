@@ -409,3 +409,15 @@ class TextClassifier:
         logger.info(f"Загрузка токенизатора {model_name}")
         tokenizer = DistilBertTokenizer.from_pretrained(model_name)
 
+        # Токенизация
+        def tokenize_function(texts):
+            return tokenizer(
+                texts,
+                padding='max_length',
+                truncation=True,
+                max_length=512,
+                return_tensors='tf'
+            )
+
+        train_encodings = tokenize_function(train_texts)
+        val_encodings = tokenize_function(val_texts)

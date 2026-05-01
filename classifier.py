@@ -72,3 +72,18 @@ class AttentionLayer(layers.Layer):
             trainable=True
         )
         super(AttentionLayer, self).build(input_shape)
+
+    def call(self, x):
+        # Вычисление весов внимания
+        e = tf.keras.backend.tanh(tf.keras.backend.dot(x, self.W) + self.b)
+        a = tf.keras.backend.softmax(e, axis=1)
+        output = x * a
+        return tf.keras.backend.sum(output, axis=1)
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], input_shape[-1])
+
+    def get_config(self):
+        config = super(AttentionLayer, self).get_config()
+        return config
+

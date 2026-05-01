@@ -719,3 +719,39 @@ def main():
     parser.add_argument('--text', help='Текст для классификации (для режима predict)')
 
     args = parser.parse_args()
+
+    # Создание классификатора
+    classifier = TextClassifier(model_dir=args.model_dir)
+
+    try:
+        if args.mode == 'train':
+            if not args.data:
+                parser.error("Для режима train требуется --data")
+            classifier.train_bilstm(args.data, args.config)
+
+        elif args.mode == 'train_transformer':
+            if not args.data:
+                parser.error("Для режима train_transformer требуется --data")
+            classifier.train_transformer(args.data, args.model_name)
+
+        elif args.mode == 'evaluate':
+            if not args.data:
+                parser.error("Для режима evaluate требуется --data")
+            classifier.load_model(args.model_dir)
+            classifier.evaluate(args.data)
+
+        elif args.mode == 'predict':
+            if not args.text:
+                parser.error("Для режима predict требуется --text")
+            classifier.load_model(args.model_dir)
+            result = classifier.predict(args.text)
+            print(f"\nТекст: {args.text}")
+            print(f"Предсказанный класс: {result}")
+
+    except Exception as e:
+        logger.error(f"Ошибка: {e}")
+        raise
+
+
+if __name__ == "__main__":
+    main()

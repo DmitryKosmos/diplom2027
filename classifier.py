@@ -591,3 +591,10 @@ class TextClassifier:
 
         texts = df['text'].tolist()
         labels = df['label'].tolist()
+
+        # Кодирование меток
+        if self.label_encoder is not None:
+            labels_encoded = self.label_encoder.transform(labels)
+        else:
+            labels_encoded = np.array(labels)
+

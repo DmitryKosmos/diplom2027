@@ -93,3 +93,19 @@ class TextClassifier:
     Основной класс для классификации текстов.
     Поддерживает BiLSTM + Attention и Transformer модели.
     """
+
+    def __init__(self, model_dir: str = "./models"):
+        """
+        Инициализация классификатора.
+
+        Args:
+            model_dir: Директория для сохранения моделей и артефактов
+        """
+        self.model_dir = Path(model_dir)
+        self.model_dir.mkdir(parents=True, exist_ok=True)
+
+        self.model = None
+        self.tokenizer = None
+        self.label_encoder = None
+        self.config = DEFAULT_CONFIG.copy()
+        self.model_type = None  # 'bilstm' или 'transformer'

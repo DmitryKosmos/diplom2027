@@ -35,3 +35,15 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+
+# Конфигурация по умолчанию
+DEFAULT_CONFIG = {
+    "max_tokens": 20000,
+    "max_len": 200,
+    "embedding_dim": 128,
+    "lstm_units": 128,
+    "epochs": 8,
+    "batch_size": 32,
+    "val_size": 0.2,
+    "n_classes": 2
+}

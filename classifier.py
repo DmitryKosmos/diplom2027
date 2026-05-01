@@ -421,3 +421,14 @@ class TextClassifier:
 
         train_encodings = tokenize_function(train_texts)
         val_encodings = tokenize_function(val_texts)
+
+        # Создание TensorFlow датасетов
+        train_dataset = tf.data.Dataset.from_tensor_slices((
+            dict(train_encodings),
+            train_labels
+        )).batch(16)
+
+        val_dataset = tf.data.Dataset.from_tensor_slices((
+            dict(val_encodings),
+            val_labels
+        )).batch(16)

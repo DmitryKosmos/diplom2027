@@ -676,3 +676,10 @@ class TextClassifier:
                 truncating='post'
             )
 
+            # Получение предсказания
+            prediction = self.model.predict(padded, verbose=0)
+
+            if self.config.get('n_classes', 2) == 2:
+                pred_class = 1 if prediction[0][0] > 0.5 else 0
+            else:
+                pred_class = np.argmax(prediction[0])

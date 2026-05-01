@@ -109,3 +109,37 @@ class TextClassifier:
         self.label_encoder = None
         self.config = DEFAULT_CONFIG.copy()
         self.model_type = None  # 'bilstm' или 'transformer'
+
+    def _validate_data(self, df: pd.DataFrame) -> bool:
+        """
+        Валидация входных данных.
+
+        Args:
+            df: DataFrame с данными
+
+        Returns:
+            True если данные валидны
+        """
+        required_columns = ['text', 'label']
+
+        # Проверка наличия обязательных колонок
+        for col in required_columns:
+            if col not in df.columns:
+                raise ValueError(f"Отсутствует обязательная колонка: {col}")
+
+        # Проверка типов данных
+        if not pd.api.types.is_string_dtype(df['text']):
+            logger.warning("Колонка 'text' должна быть строкового типа. Выполняется преобразование...")
+            df['text'] = df['text'].astype(str)
+
+        if not pd.api.types.is_integer_dtype(df['label']):
+            try:
+                df['label'] = df['label'].astype(int)
+            except:
+                raise ValueError("Колонка 'label' должна содержать целочисленные значения")
+
+        # Проверка на пустые значения
+        if df['text'].isnull().any() or df['label'].isnull().any():
+            raise ValueError("Данные содержат пропущенные значения")
+
+        return True

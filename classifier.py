@@ -254,3 +254,10 @@ class TextClassifier:
 
         self.model_type = 'bilstm'
 
+
+        # Загрузка конфигурации
+        if config_path and os.path.exists(config_path):
+            with open(config_path, 'r', encoding='utf-8') as f:
+                user_config = json.load(f)
+                self.config.update(user_config)
+                logger.info(f"Загружена конфигурация из {config_path}")

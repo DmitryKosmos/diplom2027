@@ -387,3 +387,7 @@ class TextClassifier:
         unique_labels = sorted(set(labels))
         n_classes = len(unique_labels)
         logger.info(f"Количество классов: {n_classes}")
+
+        # Кодирование меток
+        self.label_encoder = LabelEncoder()
+        labels_encoded = self.label_encoder.fit_transform(labels)

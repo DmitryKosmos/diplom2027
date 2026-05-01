@@ -635,3 +635,19 @@ class TextClassifier:
             pred_classes = pred_classes
         else:
             target_names = 'auto'
+
+        # Вывод результатов
+        logger.info(f"\nAccuracy: {accuracy:.4f}")
+        logger.info("\nClassification Report:")
+        print(classification_report(
+            labels_encoded,
+            pred_classes,
+            target_names=target_names,
+            zero_division=0
+        ))
+
+        return {
+            'accuracy': accuracy,
+            'predictions': pred_classes,
+            'true_labels': labels_encoded
+        }

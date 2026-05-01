@@ -499,3 +499,9 @@ class TextClassifier:
             model_dir: Директория с сохраненной моделью
         """
         model_dir = Path(model_dir)
+
+        # Загрузка конфигурации
+        config_path = model_dir / 'config.json'
+        if config_path.exists():
+            with open(config_path, 'r', encoding='utf-8') as f:
+                self.config.update(json.load(f))

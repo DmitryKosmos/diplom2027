@@ -28,3 +28,10 @@ try:
 except ImportError:
     TRANSFORMERS_AVAILABLE = False
     print("Внимание: библиотека transformers не установлена. Режим train_transformer будет недоступен.")
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+logger = logging.getLogger(__name__)

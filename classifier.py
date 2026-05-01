@@ -350,3 +350,10 @@ class TextClassifier:
         )
 
         logger.info("Обучение завершено!")
+
+        # Оценка на валидационной выборке
+        val_loss, val_accuracy = self.model.evaluate(X_val, y_val, verbose=0)
+        logger.info(f"Validation Loss: {val_loss:.4f}")
+        logger.info(f"Validation Accuracy: {val_accuracy:.4f}")
+
+        return history

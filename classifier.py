@@ -601,3 +601,26 @@ class TextClassifier:
         # Предсказания в зависимости от типа модели
         if self.model_type == 'bilstm':
             X_test, y_test = self._prepare_data_bilstm(texts, labels_encoded, fit_tokenizer=False)
+
+            # Получение предсказаний
+            predictions = self.model.predict(X_test)
+
+            if self.config.get('n_classes', 2) == 2:
+                pred_classes = (predictions > 0.5).astype(int).flatten()
+            else:
+                pred_classes = np.argmax(predictions, axis=1)
+
+        else:  # transformer
+            # Токенизация
+            encodings = self.tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                max_length=512,
+                return_tensors='tf'
+            )
+
+            # Предсказания
+            outputs = self.model(encodings)
+            logits = outputs.logits
+            pred_classes = tf.argmax(logits, axis=-1).numpy()

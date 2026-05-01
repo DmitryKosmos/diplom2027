@@ -20,3 +20,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
+# Для трансформеров (опционально)
+try:
+    from transformers import DistilBertTokenizer, TFDistilBertForSequenceClassification
+
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    print("Внимание: библиотека transformers не установлена. Режим train_transformer будет недоступен.")

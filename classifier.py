@@ -337,3 +337,14 @@ class TextClassifier:
                 verbose=1
             )
         ]
+
+        # Обучение
+        logger.info("Начало обучения...")
+        history = self.model.fit(
+            X_train, y_train,
+            validation_data=(X_val, y_val),
+            epochs=self.config['epochs'],
+            batch_size=self.config['batch_size'],
+            callbacks=callbacks,
+            verbose=1
+        )

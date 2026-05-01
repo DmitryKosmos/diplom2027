@@ -464,3 +464,15 @@ class TextClassifier:
                 verbose=1
             )
         ]
+
+        # Обучение
+        logger.info("Начало обучения...")
+        history = self.model.fit(
+            train_dataset,
+            validation_data=val_dataset,
+            epochs=3,
+            callbacks=callbacks,
+            verbose=1
+        )
+
+        logger.info("Обучение завершено!")

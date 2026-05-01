@@ -598,3 +598,6 @@ class TextClassifier:
         else:
             labels_encoded = np.array(labels)
 
+        # Предсказания в зависимости от типа модели
+        if self.model_type == 'bilstm':
+            X_test, y_test = self._prepare_data_bilstm(texts, labels_encoded, fit_tokenizer=False)

@@ -293,3 +293,8 @@ class TextClassifier:
         tokenizer_path = self.model_dir / 'tokenizer.pickle'
         with open(tokenizer_path, 'wb') as f:
             pickle.dump(self.tokenizer, f)
+
+        # Сохранение LabelEncoder
+        encoder_path = self.model_dir / 'label_encoder.pickle'
+        with open(encoder_path, 'wb') as f:
+            pickle.dump(self.label_encoder, f)

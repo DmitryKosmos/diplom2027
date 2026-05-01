@@ -281,3 +281,7 @@ class TextClassifier:
         self.config['n_classes'] = n_classes
         logger.info(f"Количество классов: {n_classes}")
         logger.info(f"Уникальные метки: {unique_labels}")
+
+        # Кодирование меток (для многоклассовой классификации)
+        self.label_encoder = LabelEncoder()
+        labels_encoded = self.label_encoder.fit_transform(labels)

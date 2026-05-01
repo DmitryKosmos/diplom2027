@@ -374,3 +374,11 @@ class TextClassifier:
         logger.info("=" * 50)
 
         self.model_type = 'transformer'
+
+        # Загрузка данных
+        logger.info(f"Загрузка данных из {data_path}")
+        df = pd.read_csv(data_path, encoding='utf-8')
+        self._validate_data(df)
+
+        texts = df['text'].tolist()
+        labels = df['label'].tolist()

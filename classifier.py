@@ -348,3 +348,5 @@ class TextClassifier:
             callbacks=callbacks,
             verbose=1
         )
+
+        logger.info("Обучение завершено!")

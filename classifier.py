@@ -261,3 +261,8 @@ class TextClassifier:
                 user_config = json.load(f)
                 self.config.update(user_config)
                 logger.info(f"Загружена конфигурация из {config_path}")
+
+        # Сохранение конфигурации
+        config_save_path = self.model_dir / 'config.json'
+        with open(config_save_path, 'w', encoding='utf-8') as f:
+            json.dump(self.config, f, indent=2, ensure_ascii=False)

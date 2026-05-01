@@ -396,3 +396,11 @@ class TextClassifier:
         encoder_path = self.model_dir / 'label_encoder.pickle'
         with open(encoder_path, 'wb') as f:
             pickle.dump(self.label_encoder, f)
+
+        # Разделение на train/validation
+        train_texts, val_texts, train_labels, val_labels = train_test_split(
+            texts, labels_encoded,
+            test_size=0.2,
+            random_state=42,
+            stratify=labels_encoded
+        )

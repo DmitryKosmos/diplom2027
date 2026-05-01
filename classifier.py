@@ -624,3 +624,14 @@ class TextClassifier:
             outputs = self.model(encodings)
             logits = outputs.logits
             pred_classes = tf.argmax(logits, axis=-1).numpy()
+
+        # Вычисление метрик
+        accuracy = accuracy_score(labels_encoded, pred_classes)
+
+        # Декодирование меток для отчета (если был encoder)
+        if self.label_encoder is not None:
+            target_names = [str(cls) for cls in self.label_encoder.classes_]
+            labels_encoded = labels_encoded
+            pred_classes = pred_classes
+        else:
+            target_names = 'auto'

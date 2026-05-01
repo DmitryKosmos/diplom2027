@@ -309,3 +309,6 @@ class TextClassifier:
 
         logger.info(f"Размер обучающей выборки: {len(X_train)}")
         logger.info(f"Размер валидационной выборки: {len(X_val)}")
+
+        # Построение модели
+        self.model = self._build_bilstm_model(n_classes)

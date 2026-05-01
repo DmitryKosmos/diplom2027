@@ -486,3 +486,7 @@ class TextClassifier:
                 'n_classes': n_classes
             }, f, indent=2, ensure_ascii=False)
 
+        # Сохранение токенизатора
+        tokenizer.save_pretrained(str(self.model_dir / 'tokenizer'))
+
+        return history

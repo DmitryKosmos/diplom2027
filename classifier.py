@@ -177,3 +177,65 @@ class TextClassifier:
         )
 
         return padded, np.array(labels)
+
+
+    def _build_bilstm_model(self, n_classes: int) -> Model:
+        """
+        Построение архитектуры BiLSTM + Attention.
+
+        Args:
+            n_classes: Количество классов
+
+        Returns:
+            Модель Keras
+        """
+        # Входной слой
+        inputs = Input(shape=(self.config['max_len'],))
+
+        # Embedding слой
+        embedding = layers.Embedding(
+            input_dim=self.config['max_tokens'],
+            output_dim=self.config['embedding_dim'],
+            input_length=self.config['max_len']
+        )(inputs)
+
+        # Bidirectional LSTM
+        lstm = layers.Bidirectional(
+            layers.LSTM(
+                self.config['lstm_units'],
+                return_sequences=True,
+                dropout=0.3,
+                recurrent_dropout=0.3
+            )
+        )(embedding)
+
+        # Dropout для регуляризации
+        dropout = layers.Dropout(0.3)(lstm)
+
+        # Attention слой
+        attention = AttentionLayer()(dropout)
+
+        # Полносвязные слои
+        dense1 = layers.Dense(64, activation='relu')(attention)
+        dropout2 = layers.Dropout(0.3)(dense1)
+
+        # Выходной слой
+        if n_classes == 2:
+            outputs = layers.Dense(1, activation='sigmoid')(dropout2)
+            loss = 'binary_crossentropy'
+            metrics = ['accuracy']
+        else:
+            outputs = layers.Dense(n_classes, activation='softmax')(dropout2)
+            loss = 'sparse_categorical_crossentropy'
+            metrics = ['accuracy']
+
+        # Создание модели
+        model = Model(inputs=inputs, outputs=outputs)
+        model.compile(
+            optimizer='adam',
+            loss=loss,
+            metrics=metrics
+        )
+
+        model.summary(print_fn=logger.info)
+        return model

@@ -698,3 +698,9 @@ class TextClassifier:
             outputs = self.model(encodings)
             logits = outputs.logits
             pred_class = tf.argmax(logits, axis=-1).numpy()[0]
+
+        # Декодирование метки
+        if self.label_encoder is not None:
+            return self.label_encoder.inverse_transform([pred_class])[0]
+        else:
+            return pred_class

@@ -448,3 +448,19 @@ class TextClassifier:
             loss=loss,
             metrics=['accuracy']
         )
+
+        # Callbacks
+        callbacks = [
+            ModelCheckpoint(
+                filepath=str(self.model_dir / 'best_transformer'),
+                save_best_only=True,
+                save_weights_only=False,
+                verbose=1
+            ),
+            EarlyStopping(
+                monitor='val_loss',
+                patience=2,
+                restore_best_weights=True,
+                verbose=1
+            )
+        ]

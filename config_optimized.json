@@ -1,0 +1,12 @@
+{
+  "max_tokens": 20000,
+  "max_len": 200,
+  "embedding_dim": 512,
+  "lstm_units": 512,
+  "epochs": 30,
+  "batch_size": 128,
+  "val_size": 0.15,
+  "n_classes": 2,
+  "dropout_rate": 0.5,
+  "learning_rate": 0.0005
+}
